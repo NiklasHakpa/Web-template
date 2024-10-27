@@ -1,0 +1,26 @@
+Header{
+    background-color: black;
+    color: white;
+    padding: 20px;
+    padding-bottom: 40px;
+}
+
+Footer{
+    position: fixed;
+    bottom: 0px;
+    width: 100vw;
+    text-align: center;
+    background-color: black;
+    color: white;
+}
+.card{
+    width: 200px;
+
+}
+
+.content{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    flex-wrap: wrap;
+}
