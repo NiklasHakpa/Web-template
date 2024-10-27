@@ -2,159 +2,119 @@ import React, { useState } from 'react';
 import logoImg from './images/logoimg.png';
 
 
-//this is the header component
-function Header ({image, otsikkotxt}) {
+// Header component
+function TitleBar({ logo, titleText }) {
     return (
-        <header className='otsikko'>
-                <img src={image} className='otsikkokuva'/>
-                <h1 className='otsikkoteksti'>{otsikkotxt}</h1>
+        <header className="header-section">
+            <img src={logo} className="logo-image" alt="Logo" />
+            <h1 className="header-text">{titleText}</h1>
         </header>
     );
-    
-};
+}
 
-function ProductsAndPrices ({ProductSelect}) {
-    //arrays for products and prices
-    const productNames = [
-        'Asus GeForce 3090', 
-        'Intel Core i7-14700k', 
-        'AMD Ryzen 7', 
-        'AMD Ryzen 9'
-    ];
-    const productPrices = [
-        '200',
-        '150', 
-        '300', 
-        '120'
+// Product selection and quantity management component
+function ProductSelector({ onProductUpdate }) {
+    // Product options
+    const items = [
+        { name: 'Asus GeForce 3090', price: 200 },
+        { name: 'Intel Core i7-14700k', price: 150 },
+        { name: 'AMD Ryzen 7', price: 300 },
+        { name: 'AMD Ryzen 9', price: 120 }
     ];
 
-    //state of selected product and quantity
-    const [selectedProduct, setSelectedProduct] = useState(0);
-    const [quantity, setQuantity] = useState(0);
-    const productChange = (event) => {
-        const productNumber = Number(event.target.value);
-        setSelectedProduct(productNumber);
-        ProductSelect(
-            productNames[productNumber], 
-            productPrices[productNumber], 
-            quantity
-        );
+    // Local state for selected product and quantity
+    const [selectedItem, setSelectedItem] = useState(0);
+    const [count, setCount] = useState(0);
+
+    const handleItemChange = (event) => {
+        const index = Number(event.target.value);
+        setSelectedItem(index);
+        onProductUpdate(items[index].name, items[index].price, count);
     };
-    //Increasung quantity
-    const incQuantity = () => {
-        const realQuantity = quantity + 1;
-        setQuantity(
-            realQuantity
-        );
-        ProductSelect(
-            productNames[selectedProduct], 
-            productPrices[selectedProduct], 
-            realQuantity
-        );
+
+    const increaseCount = () => {
+        const newCount = count + 1;
+        setCount(newCount);
+        onProductUpdate(items[selectedItem].name, items[selectedItem].price, newCount);
     };
-    //?Decrease quantity?
-    const decQuantity = () => {
-        if (quantity > 0) {//not belowe zero
-            const realQuantity = quantity - 1;
-            setQuantity(
-                realQuantity
-            );
-            ProductSelect(
-                productNames[selectedProduct], 
-                productPrices[selectedProduct], 
-                realQuantity
-            );
+
+    const decreaseCount = () => {
+        if (count > 0) {
+            const newCount = count - 1;
+            setCount(newCount);
+            onProductUpdate(items[selectedItem].name, items[selectedItem].price, newCount);
         }
     };
+
     return (
-        <div className='tuotetiedot'>
-            <h2>Select product</h2>
+        <div className="product-selection">
+            <h2>Choose a Product</h2>
             <label>Product: </label>
-
-            <select value={selectedProduct} onChange={productChange}>
-                {productNames.map((product, p) => (
-                <option 
-                    key={p} 
-                    value={p}> 
-                    {product} -
-                    {productPrices[p]}+ €
-                </option>
-            ))} 
+            <select value={selectedItem} onChange={handleItemChange}>
+                {items.map((item, index) => (
+                    <option key={index} value={index}>
+                        {item.name} - {item.price} €
+                    </option>
+                ))}
             </select>
-            <div>
-                <button onClick={decQuantity}>
-                    -
-                </button>
-
-                <span>
-                    Quantity: {quantity} 
-                </span>
-                
-                <button onClick={incQuantity}>
-                    +
-                </button>
+            <div className="quantity-controls">
+                <button onClick={decreaseCount}>-</button>
+                <span>Quantity: {count}</span>
+                <button onClick={increaseCount}>+</button>
             </div>
-            
         </div>
     );
-};
+}
 
-function OrderInfo ({productNames,productPrices, quantity}) {
-    //calculate total price of selected products
-    const realPrice = productPrices * quantity;
+// Order summary component to display selected items
+function OrderSummary({ itemName, itemPrice, count }) {
+    const totalPrice = itemPrice * count;
     return (
-        <div>
-            <h2>Order info</h2>
-            <table className='tilaustiedot'>
+        <div className="order-summary">
+            <h2>Order Summary</h2>
+            <table className="order-details">
                 <thead>
                     <tr>
                         <th>Product</th>
                         <th>Quantity</th>
-                        <th>Total</th>
+                        <th>Total Cost</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{productNames}</td>
-                        <td>{quantity}</td>
-                        <td>{realPrice}€</td>
+                        <td>{itemName}</td>
+                        <td>{count}</td>
+                        <td>{totalPrice} €</td>
                     </tr>
                 </tbody>
             </table>
         </div>
     );
-};
+}
 
-function CompExercise () {
-    const [order, setOrder] = useState ({
-        //orderdetails
-        productNames: '',
-        productPrices: 0,
-        quantity: 0,
+// Main component to manage and display product order
+function ProductOrderPage() {
+    const [order, setOrder] = useState({
+        itemName: '',
+        itemPrice: 0,
+        count: 0,
     });
-    const handleProductChange = (
-        productNames, 
-        productPrices, 
-        quantity
-        ) => {
-        setOrder({
-            productNames,
-            productPrices,
-            quantity,
-        });
+
+    const handleProductUpdate = (itemName, itemPrice, count) => {
+        setOrder({ itemName, itemPrice, count });
     };
+
     return (
-        <div className='container'>
-            <Header image={logoImg} otsikkotxt='Welcome to the product page!'/>
-            <ProductsAndPrices ProductSelect={handleProductChange}/>
-            <OrderInfo
-                productNames={order.productNames}
-                productPrices={order.productPrices}
-                quantity={order.quantity}
+        <div className="order-page">
+            <TitleBar logo={logoImg} titleText="Welcome to Our Store!" />
+            <ProductSelector onProductUpdate={handleProductUpdate} />
+            <OrderSummary
+                itemName={order.itemName}
+                itemPrice={order.itemPrice}
+                count={order.count}
             />
         </div>
     );
-};
+}
 
-
-export default CompExercise;
+export default ProductOrderPage;

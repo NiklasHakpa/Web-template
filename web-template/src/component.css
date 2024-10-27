@@ -4,30 +4,31 @@
     justify-content: center;
     align-items: center;
 }
-.otsikko{
+.header-section{
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.otsikkokuva{
-    max-width: 30%;
-    padding: 5em;
+
+.logo-image {
+        max-width: 200px; 
+        margin-bottom: 10px; 
 }
 
-.otsikkoteksti{
+.header-text{
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 70px;
     font-weight: bold;
 }
 
-.tuotetiedot{
+.order-details{
     border: 1px solid black;
     padding: 4em;
     text-align: center;
 }
 
-.tilaustiedot{
+.order-page{
     border: 1px solid black;
     padding: 4em;
     text-align: center;
