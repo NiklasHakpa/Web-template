@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import logoImg from './images/logoimg.png';
-import App from './App';
+
 
 //this is the header component
 function Header ({image, otsikkotxt}) {
     return (
-        <header className='header'>
-                <img src={image} className='headerImage'/>
-                <h1 className='headerTitle'>{otsikkotxt}</h1>
+        <header className='otsikko'>
+                <img src={image} className='otsikkokuva'/>
+                <h1 className='otsikkoteksti'>{otsikkotxt}</h1>
         </header>
     );
     
 };
 
-function ProductForm ({onProductChange}) {
+function ProductsAndPrices ({ProductSelect}) {
     //arrays for products and prices
     const productNames = [
         'Asus GeForce 3090', 
@@ -32,11 +32,11 @@ function ProductForm ({onProductChange}) {
     const [selectedProduct, setSelectedProduct] = useState(0);
     const [quantity, setQuantity] = useState(0);
     const productChange = (event) => {
-        const productIndex = Number(event.target.value);
-        setSelectedProduct(productIndex);
-        onProductChange(
-            productNames[productIndex], 
-            productPrices[productIndex], 
+        const productNumber = Number(event.target.value);
+        setSelectedProduct(productNumber);
+        ProductSelect(
+            productNames[productNumber], 
+            productPrices[productNumber], 
             quantity
         );
     };
@@ -46,7 +46,7 @@ function ProductForm ({onProductChange}) {
         setQuantity(
             realQuantity
         );
-        onProductChange(
+        ProductSelect(
             productNames[selectedProduct], 
             productPrices[selectedProduct], 
             realQuantity
@@ -59,7 +59,7 @@ function ProductForm ({onProductChange}) {
             setQuantity(
                 realQuantity
             );
-            onProductChange(
+            ProductSelect(
                 productNames[selectedProduct], 
                 productPrices[selectedProduct], 
                 realQuantity
@@ -67,7 +67,7 @@ function ProductForm ({onProductChange}) {
         }
     };
     return (
-        <div className='product-form'>
+        <div className='tuotetiedot'>
             <h2>Select product</h2>
             <label>Product: </label>
 
@@ -99,13 +99,13 @@ function ProductForm ({onProductChange}) {
     );
 };
 
-function OrderInfo ({productNames, productPrices, quantity}) {
+function OrderInfo ({productNames,productPrices, quantity}) {
     //calculate total price of selected products
     const realPrice = productPrices * quantity;
     return (
         <div>
             <h2>Order info</h2>
-            <table className='order-info'>
+            <table className='tilaustiedot'>
                 <thead>
                     <tr>
                         <th>Product</th>
@@ -146,7 +146,7 @@ function CompExercise () {
     return (
         <div className='container'>
             <Header image={logoImg} otsikkotxt='Welcome to the product page!'/>
-            <ProductForm onProductChange={handleProductChange}/>
+            <ProductsAndPrices ProductSelect={handleProductChange}/>
             <OrderInfo
                 productNames={order.productNames}
                 productPrices={order.productPrices}
