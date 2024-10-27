@@ -34,29 +34,127 @@ function ProductForm ({onProductChange}) {
     const productChange = (event) => {
         const productIndex = Number(event.target.value);
         setSelectedProduct(productIndex);
-        onProductChange(productNames[productIndex], productPrices[productIndex], quantity);
+        onProductChange(
+            productNames[productIndex], 
+            productPrices[productIndex], 
+            quantity
+        );
     };
     //Increasung quantity
-    const increaseQuantity = () => {
-        const newQuantity = quantity + 1;
-        setQuantity(newQuantity);
-        onProductChange(productNames[selectedProduct], productPrices[selectedProduct], newQuantity);
+    const incQuantity = () => {
+        const realQuantity = quantity + 1;
+        setQuantity(
+            realQuantity
+        );
+        onProductChange(
+            productNames[selectedProduct], 
+            productPrices[selectedProduct], 
+            realQuantity
+        );
     };
     //?Decrease quantity?
-    const decreaseQuantity = () => {
-        if (quantity > 0) {
-            const newQuantity = quantity - 1;
-            setQuantity(newQuantity);
-            onProductChange(productNames[selectedProduct], productPrices[selectedProduct], newQuantity);
+    const decQuantity = () => {
+        if (quantity > 0) {//not belowe zero
+            const realQuantity = quantity - 1;
+            setQuantity(
+                realQuantity
+            );
+            onProductChange(
+                productNames[selectedProduct], 
+                productPrices[selectedProduct], 
+                realQuantity
+            );
         }
     };
+    return (
+        <div className='product-form'>
+            <h2>Select product</h2>
+            <label>Product: </label>
 
+            <select value={selectedProduct} onChange={productChange}>
+                {productNames.map((product, p) => (
+                <option 
+                    key={p} 
+                    value={p}> 
+                    {product} -
+                    {productPrices[p]}+ €
+                </option>
+            ))} 
+            </select>
+            <div>
+                <button onClick={decQuantity}>
+                    -
+                </button>
 
+                <span>
+                    Quantity: {quantity} 
+                </span>
+                
+                <button onClick={incQuantity}>
+                    +
+                </button>
+            </div>
+            
+        </div>
+    );
+};
 
-        return (
+function OrderInfo ({productNames, productPrices, quantity}) {
+    //calculate total price of selected products
+    const realPrice = productPrices * quantity;
+    return (
+        <div>
+            <h2>Order info</h2>
+            <table className='order-info'>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{productNames}</td>
+                        <td>{quantity}</td>
+                        <td>{realPrice}€</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    );
+};
+
+function CompExercise () {
+    const [order, setOrder] = useState ({
+        //orderdetails
+        productNames: '',
+        productPrices: 0,
+        quantity: 0,
+    });
+    const handleProductChange = (
+        productNames, 
+        productPrices, 
+        quantity
+        ) => {
+        setOrder({
+            productNames,
+            productPrices,
+            quantity,
+        });
+    };
+    return (
         <div className='container'>
             <Header image={logoImg} otsikkotxt='Welcome to the product page!'/>
-            </div>
-)}
+            <ProductForm onProductChange={handleProductChange}/>
+            <OrderInfo
+                productNames={order.productNames}
+                productPrices={order.productPrices}
+                quantity={order.quantity}
+            />
+        </div>
+    );
+};
 
-export default App;
+
+export default CompExercise;

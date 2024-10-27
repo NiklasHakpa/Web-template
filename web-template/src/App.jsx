@@ -1,3 +1,3 @@
-import ComponentExercise from './componentsExercise'
+import CompExercise from './componentsExercise.jsx';
 
 export default App
