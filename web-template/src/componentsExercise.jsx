@@ -14,15 +14,42 @@ function Header ({image, otsikkotxt}) {
 };
 
 function ProductForm ({onProductChange}) {
-    //arrays for produycts and prices
-    const productNames = ['Asus GeForce 3090', 'Intel Core i7-14700k', 'AMD Ryzen 7', 'AMD Ryzen 9'];
-    const productPrices = ['200','150', '300', '120'];
+    //arrays for products and prices
+    const productNames = [
+        'Asus GeForce 3090', 
+        'Intel Core i7-14700k', 
+        'AMD Ryzen 7', 
+        'AMD Ryzen 9'
+    ];
+    const productPrices = [
+        '200',
+        '150', 
+        '300', 
+        '120'
+    ];
 
     //state of selected product and quantity
     const [selectedProduct, setSelectedProduct] = useState(0);
     const [quantity, setQuantity] = useState(0);
-    
-
+    const productChange = (event) => {
+        const productIndex = Number(event.target.value);
+        setSelectedProduct(productIndex);
+        onProductChange(productNames[productIndex], productPrices[productIndex], quantity);
+    };
+    //Increasung quantity
+    const increaseQuantity = () => {
+        const newQuantity = quantity + 1;
+        setQuantity(newQuantity);
+        onProductChange(productNames[selectedProduct], productPrices[selectedProduct], newQuantity);
+    };
+    //?Decrease quantity?
+    const decreaseQuantity = () => {
+        if (quantity > 0) {
+            const newQuantity = quantity - 1;
+            setQuantity(newQuantity);
+            onProductChange(productNames[selectedProduct], productPrices[selectedProduct], newQuantity);
+        }
+    };
 
 
 
